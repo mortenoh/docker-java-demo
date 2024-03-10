@@ -2,6 +2,7 @@ package com.example.docker.web;
 
 import com.example.docker.domain.Status;
 import com.example.docker.service.DockerService;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.model.Container;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/docker")
 public class DockerController {
 
-  private DockerService dockerService = null;
+  private final DockerService dockerService;
 
   public DockerController(DockerService dockerService) {
     this.dockerService = dockerService;
   }
 
-  @GetMapping({"", "images"})
+  @GetMapping({"", "/", "images"})
   public List<String> images() {
     return dockerService.images();
   }
@@ -35,27 +36,30 @@ public class DockerController {
     return dockerService.container(id);
   }
 
-  @GetMapping("/start")
-  public Status start(@RequestParam String id) {
-    dockerService.start(id);
-    return new Status("OK");
+  @GetMapping("/create")
+  public InspectContainerResponse create(
+      @RequestParam String id,
+      @RequestParam(required = false) boolean start,
+      @RequestParam(required = false, defaultValue = "") List<String> env,
+      @RequestParam(required = false, defaultValue = "") List<String> portBindings) {
+    return dockerService.createContainer(id, start, env, portBindings);
   }
 
   @GetMapping("/restart")
   public Status restart(@RequestParam String id) {
-    dockerService.restart(id);
+    dockerService.restartContainer(id);
     return new Status("OK");
   }
 
   @GetMapping("/stop")
   public Status stop(@RequestParam String id) {
-    dockerService.stop(id);
+    dockerService.stopContainer(id);
     return new Status("OK");
   }
 
   @GetMapping("/kill")
   public Status kill(@RequestParam String id) {
-    dockerService.kill(id);
+    dockerService.killContainer(id);
     return new Status("OK");
   }
 
