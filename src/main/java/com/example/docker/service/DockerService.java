@@ -27,7 +27,7 @@ public class DockerService {
       result.addAll(List.of(image.getRepoTags()));
     }
 
-    return result;
+    return result.stream().sorted().toList();
   }
 
   public List<String> containers() {
