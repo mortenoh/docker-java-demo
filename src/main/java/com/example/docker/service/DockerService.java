@@ -8,7 +8,6 @@ import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.PortBinding;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
